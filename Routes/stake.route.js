@@ -4,6 +4,6 @@ import { protect } from "../Middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.post("/:tournamentId", protect, stakeInTournament);
+router.post("/:tournamentId", stakeInTournament);
 
 export default router;

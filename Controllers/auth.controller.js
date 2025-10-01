@@ -29,8 +29,7 @@ export const registerUser = async (req, res) => {
 
     res.status(201).json({
       message: "User registered successfully",
-      user: { id: user._id, 
-     username: user.username, email: user.email },
+      user: { id: user._id, username: user.username, email: user.email },
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -50,7 +49,7 @@ export const loginUser = async (req, res) => {
     if (!isMatch)
       return res.status(400).json({ message: "Invalid credentials" });
 
-    const token = generateTokenAndSetCookie(user._id);
+    const token = generateTokenAndSetCookie(res, user._id);
 
     res.json({
       message: "Login successful",

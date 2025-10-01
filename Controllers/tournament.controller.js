@@ -30,7 +30,7 @@ export const createTournament = async (req, res) => {
     const tournament = new Tournament({
       name,
       gameId,
-      creatorId: req.user._id, // always the Mongo ObjectId
+      //creatorId: req.user._id, // always the Mongo ObjectId
       tournamentCode,
       stakeAmount,
       minPlayers,
@@ -61,54 +61,67 @@ export const createTournament = async (req, res) => {
 
 export const joinTournament = async (req, res) => {
   try {
-    const { tournamentCode, walletAddress } = req.body;
+    const apiKey = req.headers["authorization"];
+    const { code } = req.body;
+    const { id } = req.params;
 
-    const tournament = await Tournament.findOne({ tournamentCode });
-    if (!tournament)
-      return res.status(404).json({ error: "Tournament not found" });
+    console.log("Join tournament:", { id, code, apiKey });
 
-    // check if already joined
+    // Validate API key
+    if (!apiKey) {
+      return res.status(401).json({ error: "Authorization header required" });
+    }
+    const game = await Game.findOne({ apiKey });
+    if (!game) {
+      return res.status(401).json({ error: "Invalid API key" });
+    }
+
+    // Find tournament
+    const tournament = await Tournament.findById(id);
+    if (!tournament || tournament.code !== code) {
+      return res.status(400).json({ error: "Invalid tournament ID or code" });
+    }
+
+    // Check if already joined
     const alreadyJoined = tournament.participants.some(
-      (p) => p.userId.toString() === req.user._id.toString()
+      (p) => p.apiKey === apiKey
     );
     if (alreadyJoined) {
       return res
         .status(400)
-        .json({ error: "You already joined this tournament" });
+        .json({ error: "Game already joined this tournament" });
     }
 
-    // add participant
+    // Add participant
     tournament.participants.push({
-      userId: req.user._id,
-      walletAddress,
-      hasStaked: false, // will flip true after staking
+      apiKey,
+      joinedAt: new Date(),
     });
 
     await tournament.save();
 
-    res.json({
-      message: "Joined tournament successfully",
-      tournamentId: tournament._id,
-      participants: tournament.participants.length,
-    });
+    res.status(200).json({ success: true });
   } catch (error) {
-    console.error(error);
+    console.error("Error joining tournament:", error.message);
     res.status(500).json({ error: "Server error joining tournament" });
   }
 };
 
 export const getTournaments = async (req, res) => {
-  const tournaments = await Tournament.find().populate(
-    "creatorId",
-    "name email"
-  );
-  res.json(tournaments);
+  try {
+    const tournaments = await Tournament.find();
+    res.json(tournaments);
+  } catch (error) {
+    res.status(500).json({ error: "Server error fetching tournaments" });
+  }
 };
+
 export const getTournamentById = async (req, res) => {
   try {
-    const tournament = await Tournament.findById(req.params.id)
-      .populate("gameId", "name")
-      .populate("creatorId", "name email");
+    const tournament = await Tournament.findById(req.params.id).populate(
+      "gameId",
+      "name"
+    );
     if (!tournament) {
       return res.status(404).json({ error: "Tournament not found" });
     }

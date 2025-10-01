@@ -24,13 +24,14 @@ export const integrateGame = async (req, res) => {
     const game = await Game.create({
       name,
       apiKey,
-      createdBy: req.user.id,
+      //createdBy: req.user.id,
     });
 
     res.status(201).json({
       success: true,
       message: "Game integrated successfully",
       game,
+      apiKey,
     });
   } catch (error) {
     console.error("Error integrating game:", error.message);

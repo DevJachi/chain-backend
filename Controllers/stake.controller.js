@@ -24,7 +24,7 @@ export const stakeInTournament = async (req, res) => {
     // Save stake record
     const stake = await Stake.create({
       tournament: tournamentId,
-      user: req.user.id,
+      // user: req.user.id,
       walletAddress,
       stakeAmount,
     });

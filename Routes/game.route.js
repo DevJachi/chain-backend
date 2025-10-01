@@ -4,7 +4,7 @@ import { protect } from "../Middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.post("/putGames", protect, integrateGame);
+router.post("/putGames", integrateGame);
 router.get("/getGames", getGames);
 
 export default router;

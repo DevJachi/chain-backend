@@ -5,6 +5,7 @@ import { connectDB } from "./db/connectDB.js";
 import tournamentRoute from "./Routes/tournament.route.js";
 import authRoute from "./Routes/auth.route.js";
 import GameRoute from "./Routes/game.route.js";
+import StakeRoute from "./Routes/stake.route.js";
 import "dotenv/config";
 
 const app = express();
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use("/api", tournamentRoute);
 app.use("/api", authRoute);
 app.use("/api", GameRoute);
+app.use("/api", StakeRoute);
 
 // Setup Connections
 const URL = `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`;

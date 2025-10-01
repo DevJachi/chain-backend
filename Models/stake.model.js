@@ -7,11 +7,11 @@ const stakeSchema = new mongoose.Schema(
       ref: "Tournament",
       required: true,
     },
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
+    // user: {
+    //  type: mongoose.Schema.Types.ObjectId,
+    // ref: "User",
+    //  required: true,
+    //},
     walletAddress: {
       type: String,
       required: true,

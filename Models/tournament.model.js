@@ -11,11 +11,11 @@ const tournamentSchema = new mongoose.Schema({
     ref: "Game",
     required: true,
   },
-  creatorId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
+  //creatorId: {
+  // type: mongoose.Schema.Types.ObjectId,
+  //ref: "User",
+  //required: true,
+  // },
   tournamentCode: {
     type: String,
     unique: true,

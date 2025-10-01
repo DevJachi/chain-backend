@@ -6,8 +6,8 @@ import { protect } from "../Middleware/auth.middleware.js";
 import { getTournamentById } from "../Controllers/tournament.controller.js";
 const router = express.Router();
 
-router.post("/createTournament", protect, createTournament);
-router.post("/joinTournament", joinTournament);
+router.post("/createTournament", createTournament);
+router.post("/tournaments/:id/join", joinTournament);
 router.get("/getTournament", getTournaments);
 router.get("/tournaments/:id", getTournamentById);
 
