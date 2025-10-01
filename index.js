@@ -13,7 +13,10 @@ const PORT = process.env.PORT || 3001;
 
 app.use(
   cors({
-    origin: "https://chainarena-ten.vercel.app/",
+    origin: [
+      "http://localhost:5173", // local dev
+      "https://chainarena-ten.vercel.app", // deployed frontend
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
