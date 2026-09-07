@@ -12,7 +12,7 @@ export const createTournament = async (req, res) => {
         .json({ error: "minPlayers and maxPlayers are required" });
     }
 
-    if (minPlayers > 2) {
+    if (minPlayers < 2) {
       return res.status(400).json({ error: "minPlayers must be at least 2" });
     }
 
@@ -78,24 +78,30 @@ export const joinTournament = async (req, res) => {
 
     // Find tournament
     const tournament = await Tournament.findById(id);
-    if (!tournament || tournament.code !== code) {
+    if (!tournament || tournament.tournamentCode !== code) {
       return res.status(400).json({ error: "Invalid tournament ID or code" });
     }
 
-    // Check if already joined
-    const alreadyJoined = tournament.participants.some(
-      (p) => p.apiKey === apiKey
-    );
+    // Check capacity
+    if (tournament.participants.length >= tournament.maxPlayers) {
+      return res.status(400).json({ error: "Tournament is full" });
+    }
+
+    // Check if already joined (by walletAddress if provided, else just allow)
+    const { walletAddress } = req.body;
+    const alreadyJoined = walletAddress
+      ? tournament.participants.some((p) => p.walletAddress === walletAddress)
+      : false;
     if (alreadyJoined) {
       return res
         .status(400)
-        .json({ error: "Game already joined this tournament" });
+        .json({ error: "Wallet already joined this tournament" });
     }
 
     // Add participant
     tournament.participants.push({
-      apiKey,
       joinedAt: new Date(),
+      walletAddress: walletAddress || null,
     });
 
     await tournament.save();
