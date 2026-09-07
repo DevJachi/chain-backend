@@ -1,6 +1,6 @@
 # ChainArena
 
-The idea of Chainarena is to be the infrastructure to onboard Web2 Games Onchain without building from scratch players compete in tournaments with on-chain ETH staking via a `TournamentPool` smart contract. Games integrate via API keys, users authenticate with JWT, and stakes are recorded against blockchain confirmation.
+The idea of Chainarena was to be the infrastructure to onboard Web2 Games Onchain without building from scratch players compete in tournaments with on-chain ETH staking via a `TournamentPool` smart contract. Games integrate via API keys, users authenticate with JWT, and stakes are recorded against blockchain confirmation.
 
 ---
 
